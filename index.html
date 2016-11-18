@@ -1,0 +1,150 @@
+<html>
+  <head>
+    <title>第六回 okayama-js 勉強会</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- knockout.js -->
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+    <script>
+      window.onload = function()
+      {
+        function TestappViewModel() {
+          var self = this;
+          // その他
+          self.radioSelectedOptionValue = ko.observable("okayama");
+          self.selectedOther= ko.computed(function() {
+              return self.radioSelectedOptionValue() == "other";
+          });
+          
+          // 入力値を同期
+          self.message = ko.observable("Hello World!!");
+
+          // クリックでカウントアップ
+          self.numberOfClicks = ko.observable(0);
+          self.incrementClickCounter = function() {
+            var previousCount = self.numberOfClicks();
+            self.numberOfClicks(previousCount + 1);
+          };
+
+          // 配列
+          self.users = ko.observableArray([
+            { name: "太郎", type: "会社員" },
+            { name: "花子", type: "主婦" },
+            { name: "一郎", type: "自営業" } ]);
+          self.addUser = function() {
+            if (self.userName() === "") {
+              alert("名前が入力がされてません！");
+              return;
+            } else if(self.userType() === "") {
+              alert("続柄が入力がされてません！");
+              return;
+            }
+            self.users.push({ name: self.userName()  , type: self.userType()  });
+          };
+          self.userTypes = ko.observableArray(["経営者","会社員","自営業","主婦"]);
+          self.userName =  ko.observable("");
+          self.userType =  ko.observable("");
+        };
+        ko.applyBindings(new TestappViewModel());
+      };
+    </script>
+  </head>
+  <body>
+    <main class="container">
+      <div class="page-header">
+        <h1>第六回 okayama-js 勉強会</h1>
+      </div>
+      <section class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">その他フォームのデモ</h2>
+        </div>
+        <div class="panel-body">
+          <div class="alert alert-info" role="alert">
+            <p>Q.今日はどこから来ましたか？</p>
+          </div>
+          <form>
+            <div class="form-group">
+              <div class="radio-inline">
+                <label><input type="radio" name="area" value="okayama" data-bind="checked: radioSelectedOptionValue"/>岡山市</label>
+              </div>
+              <div class="radio-inline">
+                <label><input type="radio" name="area" value="kurashiki" data-bind="checked: radioSelectedOptionValue"/>倉敷市</label>
+              </div>
+              <div class="radio-inline">
+                <label><input type="radio" name="area" value="takahashis" data-bind="checked: radioSelectedOptionValue"/>高梁市</label>
+              </div>
+              <div class="radio-inline">
+                <label><input type="radio" name="area" value="tuyama" data-bind="checked: radioSelectedOptionValue"/>津山市</label>
+              </div>
+              <div class="radio-inline">
+                <label><input type="radio" name="area" value="other" data-bind="checked: radioSelectedOptionValue"/>その他</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text"  class="form-control"  data-bind="enable: selectedOther" placeholder="その他の方は具体的に記入してください。"/>
+            </div>
+          </form>
+        </div>
+      </section>
+      <section class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">入力値を同期のデモ</h2>
+        </div>
+        <div class="panel-body">
+          <input type="text" class="form-control"  data-bind="value: message"/>
+          <p class="form-control-static"><span data-bind="text: message"></span></p>
+          
+        </div>
+      </section>
+      <section class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">クリックでカウントアップのデモ</h2>
+        </div>
+        <div class="panel-body">
+          <p class="form-control-static"><span data-bind="text: numberOfClicks"></span>回クリックしました</p>
+          <button class="btn btn-danger" data-bind="click: incrementClickCounter" >クリックしてください</button>
+        </div>
+      </section>
+      <section class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">配列のデモ</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-inline">
+            <div class="form-group">
+              <label for="firstname">名前</label>
+              <input class="form-control" id="firstname" type="text" data-bind="value: userName">
+            </div>
+            <div class="form-group">
+              <label for="type">職業</label>
+              <select id="type" class="form-control" data-bind="options: userTypes,
+                        value: userType,
+                        optionsCaption: '-選択してください-'"></select>
+            </div>
+            <button type="submit" class="btn btn-primary" data-bind="click: addUser">追加</button>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>名前</th>
+                <th>職業</th>
+              </tr>
+            </thead>
+            <tbody data-bind="foreach: users">
+              <tr>
+                <td data-bind="text: $index() + 1"></td>
+                <td data-bind="text: name"></td>
+                <td data-bind="text: type"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
