@@ -39,11 +39,15 @@
             if (self.userName() === "") {
               alert("名前が入力がされてません！");
               return;
-            } else if(self.userType() === "") {
-              alert("続柄が入力がされてません！");
+            } else if(self.userType() === "" || self.userType() == null) {
+              alert("職業が入力がされてません！");
               return;
             }
+            alert(self.userType());
             self.users.push({ name: self.userName()  , type: self.userType()  });
+          };
+          self.removeUser = function() {
+              self.users.remove(this);
           };
           self.userTypes = ko.observableArray(["経営者","会社員","自営業","主婦"]);
           self.userName =  ko.observable("");
@@ -133,6 +137,7 @@
                 <th>id</th>
                 <th>名前</th>
                 <th>職業</th>
+                <th></th>
               </tr>
             </thead>
             <tbody data-bind="foreach: users">
@@ -140,6 +145,7 @@
                 <td data-bind="text: $index() + 1"></td>
                 <td data-bind="text: name"></td>
                 <td data-bind="text: type"></td>
+                <td><button type="submit" class="btn btn-danger" data-bind="click: $parent.removeUser">削除</button></td>
               </tr>
             </tbody>
           </table>
